@@ -1,0 +1,20 @@
+[general]
+shuffle_caption = false
+caption_dropout_rate = 0.0
+caption_tag_dropout_rate = 0.0
+token_warmup_step = 0
+caption_extension = ".txt"
+keep_tokens = 1  # always keep "blondiebimbo" token first
+
+[[datasets]]
+resolution = 1024
+batch_size = 1
+enable_bucket = true
+min_bucket_reso = 768
+max_bucket_reso = 1280
+bucket_reso_steps = 64
+
+  [[datasets.subsets]]
+  image_dir = "/home/derek/ComfyUI/training/blondiebimbo/10_blondiebimbo"
+  caption_extension = ".txt"
+  num_repeats = 10

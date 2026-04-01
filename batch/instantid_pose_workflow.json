@@ -1,0 +1,131 @@
+{
+  "1": {
+    "inputs": { "ckpt_name": "RealVisXL_V4.0.safetensors" },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": { "title": "Load Checkpoint" }
+  },
+  "2": {
+    "inputs": { "image": "portrait_eye_refinement.png", "upload": "image" },
+    "class_type": "LoadImage",
+    "_meta": { "title": "Face Reference" }
+  },
+  "3": {
+    "inputs": { "image": "portrait_eye_refinement.png", "upload": "image" },
+    "class_type": "LoadImage",
+    "_meta": { "title": "Pose Reference" }
+  },
+  "4": {
+    "inputs": { "instantid_file": "ip-adapter.bin" },
+    "class_type": "InstantIDModelLoader",
+    "_meta": { "title": "InstantID Loader" }
+  },
+  "5": {
+    "inputs": { "control_net_name": "instantid_controlnet.safetensors" },
+    "class_type": "ControlNetLoader",
+    "_meta": { "title": "InstantID ControlNet" }
+  },
+  "6": {
+    "inputs": { "control_net_name": "control-lora-openposeXL2-rank256.safetensors" },
+    "class_type": "ControlNetLoader",
+    "_meta": { "title": "Pose ControlNet (SDXL OpenPose)" }
+  },
+  "8": {
+    "inputs": { "provider": "CPU" },
+    "class_type": "InstantIDFaceAnalysis",
+    "_meta": { "title": "Face Analysis" }
+  },
+  "9": {
+    "inputs": {
+      "image": ["3", 0],
+      "detect_hand": "enable",
+      "detect_body": "enable",
+      "detect_face": "enable",
+      "resolution": 512
+    },
+    "class_type": "DWPosePreprocessor",
+    "_meta": { "title": "Extract Pose" }
+  },
+  "10": {
+    "inputs": {
+      "text": "score_9, score_8_up, score_7_up, masterpiece, photorealistic, woman standing in a modern corporate office, professional attire, natural office lighting, desk and windows in background, sharp focus",
+      "clip": ["1", 1]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": { "title": "Positive Prompt" }
+  },
+  "11": {
+    "inputs": {
+      "text": "score_1, score_2, score_3, score_4, score_5, score_6, worst quality, bad quality, ugly, deformed, blurry, watermark, text",
+      "clip": ["1", 1]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": { "title": "Negative Prompt" }
+  },
+  "13": {
+    "inputs": {
+      "width": 832,
+      "height": 1216,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": { "title": "Empty Latent" }
+  },
+  "14": {
+    "inputs": {
+      "instantid": ["4", 0],
+      "insightface": ["8", 0],
+      "control_net": ["5", 0],
+      "image": ["2", 0],
+      "model": ["1", 0],
+      "positive": ["10", 0],
+      "negative": ["11", 0],
+      "ip_weight": 0.7,
+      "cn_strength": 0.6,
+      "start_at": 0.0,
+      "end_at": 1.0,
+      "noise": 0.0,
+      "combine_embeds": "average"
+    },
+    "class_type": "ApplyInstantIDAdvanced",
+    "_meta": { "title": "Apply InstantID (Face)" }
+  },
+  "15": {
+    "inputs": {
+      "positive": ["14", 1],
+      "negative": ["14", 2],
+      "control_net": ["6", 0],
+      "image": ["9", 0],
+      "strength": 0.7,
+      "start_percent": 0.0,
+      "end_percent": 1.0
+    },
+    "class_type": "ControlNetApplyAdvanced",
+    "_meta": { "title": "Apply Pose ControlNet" }
+  },
+  "16": {
+    "inputs": {
+      "seed": 42,
+      "steps": 20,
+      "cfg": 5.5,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 1.0,
+      "model": ["14", 0],
+      "positive": ["15", 0],
+      "negative": ["15", 1],
+      "latent_image": ["13", 0]
+    },
+    "class_type": "KSampler",
+    "_meta": { "title": "KSampler" }
+  },
+  "17": {
+    "inputs": { "samples": ["16", 0], "vae": ["1", 2] },
+    "class_type": "VAEDecode",
+    "_meta": { "title": "VAE Decode" }
+  },
+  "18": {
+    "inputs": { "filename_prefix": "InstantID_Pose", "images": ["17", 0] },
+    "class_type": "SaveImage",
+    "_meta": { "title": "Save Image" }
+  }
+}

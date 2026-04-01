@@ -1,0 +1,99 @@
+{
+  "1": {
+    "inputs": { "ckpt_name": "RealVisXL_V4.0.safetensors" },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": { "title": "Load Checkpoint" }
+  },
+  "2": {
+    "inputs": { "image": "portrait_eye_refinement.png", "upload": "image" },
+    "class_type": "LoadImage",
+    "_meta": { "title": "Face Reference" }
+  },
+  "3": {
+    "inputs": { "instantid_file": "ip-adapter.bin" },
+    "class_type": "InstantIDModelLoader",
+    "_meta": { "title": "InstantID Loader" }
+  },
+  "4": {
+    "inputs": { "control_net_name": "instantid_controlnet.safetensors" },
+    "class_type": "ControlNetLoader",
+    "_meta": { "title": "ControlNet Loader" }
+  },
+  "5": {
+    "inputs": { "provider": "CPU" },
+    "class_type": "InstantIDFaceAnalysis",
+    "_meta": { "title": "Face Analysis" }
+  },
+  "6": {
+    "inputs": {
+      "text": "score_9, score_8_up, score_7_up, masterpiece, photorealistic, woman standing in a modern corporate office, professional attire, natural office lighting, desk and windows in background, sharp focus",
+      "clip": ["1", 1]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": { "title": "Positive Prompt" }
+  },
+  "7": {
+    "inputs": {
+      "text": "score_1, score_2, score_3, score_4, score_5, score_6, worst quality, bad quality, ugly, deformed, blurry, watermark, text",
+      "clip": ["1", 1]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": { "title": "Negative Prompt" }
+  },
+  "8": {
+    "inputs": { "image": ["2", 0] },
+    "class_type": "GetImageSize+",
+    "_meta": { "title": "Get Image Size" }
+  },
+  "9": {
+    "inputs": {
+      "width": ["8", 0],
+      "height": ["8", 1],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": { "title": "Empty Latent" }
+  },
+  "10": {
+    "inputs": {
+      "instantid": ["3", 0],
+      "insightface": ["5", 0],
+      "control_net": ["4", 0],
+      "image": ["2", 0],
+      "model": ["1", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "weight": 0.5,
+      "start_at": 0,
+      "end_at": 1
+    },
+    "class_type": "ApplyInstantID",
+    "_meta": { "title": "Apply InstantID" }
+  },
+  "11": {
+    "inputs": {
+      "seed": 42,
+      "steps": 20,
+      "cfg": 7.5,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 1.0,
+      "model": ["10", 0],
+      "positive": ["10", 1],
+      "negative": ["10", 2],
+      "latent_image": ["9", 0]
+    },
+    "class_type": "KSampler",
+    "_meta": { "title": "KSampler" }
+  },
+  "12": {
+    "inputs": { "samples": ["11", 0], "vae": ["1", 2] },
+    "class_type": "VAEDecode",
+    "_meta": { "title": "VAE Decode" }
+  },
+  "13": {
+    "inputs": { "filename_prefix": "InstantID", "images": ["12", 0] },
+    "class_type": "SaveImage",
+    "_meta": { "title": "Save Image" }
+  }
+}

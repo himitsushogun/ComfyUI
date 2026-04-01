@@ -1,0 +1,48 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "Flux2_00025_.png",
+      "upload": "image"
+    }
+  },
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "face_reference_clean.png",
+      "upload": "image"
+    }
+  },
+  "3": {
+    "class_type": "StableMakeup_LoadModel",
+    "inputs": {
+      "ckpt_name": "v1-5-pruned-emaonly.safetensors",
+      "clip": "clip_l.safetensors",
+      "lora": "none",
+      "lora_scale": 1.0,
+      "lora_trigger_words": "best",
+      "scheduler": "DDIM"
+    }
+  },
+  "4": {
+    "class_type": "StableMakeup_Sampler",
+    "inputs": {
+      "id_image": ["1", 0],
+      "makeup_image": ["2", 0],
+      "model": ["3", 0],
+      "facedetector": "resnet",
+      "dataname": "wflw",
+      "cfg": 1.6,
+      "steps": 30,
+      "width": 512,
+      "height": 512
+    }
+  },
+  "5": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["4", 0],
+      "filename_prefix": "StableMakeup"
+    }
+  }
+}

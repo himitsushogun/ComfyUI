@@ -1,0 +1,32 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "stable_makeup_preview.png"
+    },
+    "_meta": {"title": "Load Image"}
+  },
+  "2": {
+    "class_type": "UpscaleModelLoader",
+    "inputs": {
+      "model_name": "4xUltrasharp_4xUltrasharpV10.pt"
+    },
+    "_meta": {"title": "Load Upscale Model"}
+  },
+  "3": {
+    "class_type": "ImageUpscaleWithModel",
+    "inputs": {
+      "upscale_model": ["2", 0],
+      "image": ["1", 0]
+    },
+    "_meta": {"title": "Upscale Image (ESRGAN)"}
+  },
+  "4": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["3", 0],
+      "filename_prefix": "Upscaled_"
+    },
+    "_meta": {"title": "Save Image"}
+  }
+}

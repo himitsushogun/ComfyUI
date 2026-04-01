@@ -1,0 +1,6 @@
+# prompts_example.txt
+# One prompt per line. Blank lines and lines starting with # are ignored.
+
+/home/derek/ComfyUI/batch/androg_hi_res.png, /home/derek/ComfyUI/batch/machine_inside_base.png, "Positive: androgynous young adult person wearing a men's business suit that fits slightly wrong,fabric pulling across chest, hips slightly wider than suit accounts for, softened facial  features, rounded jaw, slightly fuller lips, high cheekbones, confused expression, looking down with his hands on his abdomen, standing inside sci-fi closet, adjust lighting to match scene, three-quarter view, full body visible, photorealistic, high detail, sharp focus. Negative: cartoon, anime, 3d render, painting, clearly masculine, overtly feminine, exaggerated  features, glamorous, low quality, blurry, deformed, extra limbs, watermark, text, bad anatomy"
+
+/home/derek/ComfyUI/output/qwen_output_00002_.png, /home/derek/ComfyUI/batch/auto_closet.png, "Replace the sci-fi machine closest with the ones in the reference image and make sure each one has a terminal next to it, no people, cinematic still, photorealistic, high detail, sharp focus. Negative: cartoon, anime, 3d render, people, figures, fantasy, cluttered, warm tones, organic materials, wood, low quality, blurry, watermark, text"

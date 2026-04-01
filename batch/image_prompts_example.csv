@@ -1,0 +1,18 @@
+# image_prompts_example.csv
+# Image + prompt pairs, one per line.
+# Format: image1, [image2, [image3,]] prompt text
+# Up to 3 image columns are supported; they map to LoadImage nodes in order.
+# Images beyond the number of LoadImage nodes in the workflow are ignored.
+# Paths can be absolute or relative to where you run the script.
+# If a prompt contains commas, wrap it in quotes.
+# Lines starting with # and blank lines are ignored.
+
+# Single image:
+/home/derek/ComfyUI/input/photo1.jpg, remove the background and replace with a snowy mountain landscape
+/home/derek/ComfyUI/input/photo2.jpg, "change the lighting to golden hour, warm sunset tones"
+
+# Two images (e.g. workflows with two LoadImage nodes — subject + reference):
+/home/derek/ComfyUI/input/subject.jpg, /home/derek/ComfyUI/input/style.jpg, apply the artistic style of the second image to the subject
+
+# Three images:
+/home/derek/ComfyUI/input/a.jpg, /home/derek/ComfyUI/input/b.jpg, /home/derek/ComfyUI/input/c.jpg, "blend all three images together, surreal composite"

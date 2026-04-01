@@ -1,0 +1,80 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "secretary_basic_hi_res.png"
+    },
+    "_meta": {"title": "Load Person Image"}
+  },
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "oar2.jpg"
+    },
+    "_meta": {"title": "Load Clothing Reference"}
+  },
+  "6": {
+    "class_type": "LayerMask: RemBgUltra",
+    "inputs": {
+      "image": ["2", 0],
+      "detail_range": 8,
+      "black_point": 0.01,
+      "white_point": 0.99,
+      "process_detail": true
+    },
+    "_meta": {"title": "Remove Mannequin Background"}
+  },
+  "3": {
+    "class_type": "LayerMask: SegformerB2ClothesUltra",
+    "inputs": {
+      "image": ["1", 0],
+      "face": false,
+      "hair": false,
+      "hat": false,
+      "sunglass": false,
+      "left_arm": true,
+      "right_arm": true,
+      "left_leg": false,
+      "right_leg": false,
+      "upper_clothes": true,
+      "skirt": true,
+      "pants": false,
+      "dress": true,
+      "belt": false,
+      "shoe": false,
+      "bag": false,
+      "scarf": false,
+      "detail_method": "GuidedFilter",
+      "detail_erode": 12,
+      "detail_dilate": 6,
+      "black_point": 0.15,
+      "white_point": 0.99,
+      "process_detail": true,
+      "device": "cuda",
+      "max_megapixels": 2.0
+    },
+    "_meta": {"title": "Auto Clothing Mask"}
+  },
+  "4": {
+    "class_type": "CatVTONWrapper",
+    "inputs": {
+      "image": ["1", 0],
+      "mask": ["3", 1],
+      "refer_image": ["6", 0],
+      "mask_grow": 30,
+      "mixed_precision": "fp16",
+      "seed": 42,
+      "steps": 50,
+      "cfg": 2.5
+    },
+    "_meta": {"title": "CatVTON Try-On"}
+  },
+  "5": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["4", 0],
+      "filename_prefix": "CatVTON_"
+    },
+    "_meta": {"title": "Save Result"}
+  }
+}

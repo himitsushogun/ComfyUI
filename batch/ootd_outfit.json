@@ -1,0 +1,41 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "_meta": {"title": "Model Image (person)"},
+    "inputs": {"image": "secretary_initial.jpg"}
+  },
+  "2": {
+    "class_type": "LoadImage",
+    "_meta": {"title": "Cloth Image (outfit)"},
+    "inputs": {"image": "oar2_outfit_clean.png"}
+  },
+  "3": {
+    "class_type": "LoadOOTDPipeline",
+    "_meta": {"title": "Load OOTDiffusion Local"},
+    "inputs": {
+      "type": "Full body",
+      "path": "/home/derek/ComfyUI/models/ootdiffusion"
+    }
+  },
+  "4": {
+    "class_type": "OOTDGenerate",
+    "_meta": {"title": "OOTDiffusion Generate"},
+    "inputs": {
+      "pipe": ["3", 0],
+      "cloth_image": ["2", 0],
+      "model_image": ["1", 0],
+      "category": "Dress",
+      "seed": 42,
+      "steps": 20,
+      "cfg": 2.0
+    }
+  },
+  "5": {
+    "class_type": "SaveImage",
+    "_meta": {"title": "Save Result"},
+    "inputs": {
+      "images": ["4", 0],
+      "filename_prefix": "OOTD_"
+    }
+  }
+}

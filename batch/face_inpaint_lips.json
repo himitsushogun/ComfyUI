@@ -1,0 +1,357 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "juggernautXLInpainting_xiInpainting.safetensors"
+    }
+  },
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "portrait.png",
+      "upload": "image"
+    }
+  },
+  "20": {
+    "class_type": "BBoxDetectorLoader(FaceParsing)",
+    "inputs": {
+      "model_name": "bbox/face_yolov8m.pt"
+    }
+  },
+  "21": {
+    "class_type": "BBoxDetect(FaceParsing)",
+    "inputs": {
+      "bbox_detector": [
+        "20",
+        0
+      ],
+      "image": [
+        "2",
+        0
+      ],
+      "threshold": 0.5,
+      "dilation": 20,
+      "dilation_ratio": 0.1,
+      "by_ratio": false
+    }
+  },
+  "22": {
+    "class_type": "BBoxListItemSelect(FaceParsing)",
+    "inputs": {
+      "bbox_list": [
+        "21",
+        0
+      ],
+      "index": 0
+    }
+  },
+  "23": {
+    "class_type": "ImageCropWithBBox(FaceParsing)",
+    "inputs": {
+      "bbox": [
+        "22",
+        0
+      ],
+      "image": [
+        "2",
+        0
+      ]
+    }
+  },
+  "26": {
+    "class_type": "ImageScale",
+    "inputs": {
+      "image": [
+        "23",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "width": 512,
+      "height": 512,
+      "crop": "disabled"
+    }
+  },
+  "3": {
+    "class_type": "FaceParsingModelLoader(FaceParsing)",
+    "inputs": {
+      "device": "cpu"
+    }
+  },
+  "4": {
+    "class_type": "FaceParsingProcessorLoader(FaceParsing)",
+    "inputs": {}
+  },
+  "5": {
+    "class_type": "FaceParse(FaceParsing)",
+    "inputs": {
+      "model": [
+        "3",
+        0
+      ],
+      "processor": [
+        "4",
+        0
+      ],
+      "image": [
+        "26",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "FaceParsingResultsParser(FaceParsing)",
+    "inputs": {
+      "result": [
+        "5",
+        1
+      ],
+      "background": false,
+      "skin": false,
+      "nose": false,
+      "eye_g": false,
+      "r_eye": false,
+      "l_eye": false,
+      "r_brow": false,
+      "l_brow": false,
+      "r_ear": false,
+      "l_ear": false,
+      "mouth": true,
+      "u_lip": true,
+      "l_lip": true,
+      "hair": false,
+      "hat": false,
+      "ear_r": false,
+      "neck_l": false,
+      "neck": false,
+      "cloth": false
+    }
+  },
+  "7": {
+    "class_type": "GrowMaskWithBlur",
+    "inputs": {
+      "mask": [
+        "6",
+        0
+      ],
+      "expand": 4,
+      "incremental_expandrate": 0.0,
+      "tapered_corners": true,
+      "flip_input": false,
+      "blur_radius": 0,
+      "lerp_alpha": 1.0,
+      "decay_factor": 1.0
+    }
+  },
+  "24": {
+    "class_type": "MaskInsertWithBBox(FaceParsing)",
+    "inputs": {
+      "bbox": [
+        "22",
+        0
+      ],
+      "image_src": [
+        "2",
+        0
+      ],
+      "mask": [
+        "7",
+        0
+      ]
+    }
+  },
+  "28": {
+    "class_type": "InpaintCropImproved",
+    "inputs": {
+      "image": [
+        "2",
+        0
+      ],
+      "mask": [
+        "24",
+        0
+      ],
+      "downscale_algorithm": "bilinear",
+      "upscale_algorithm": "bicubic",
+      "preresize": false,
+      "preresize_mode": "ensure minimum resolution",
+      "preresize_min_width": 1024,
+      "preresize_min_height": 1024,
+      "preresize_max_width": 8192,
+      "preresize_max_height": 8192,
+      "mask_fill_holes": true,
+      "mask_expand_pixels": 0,
+      "mask_invert": false,
+      "mask_blend_pixels": 20,
+      "mask_hipass_filter": 0.1,
+      "extend_for_outpainting": false,
+      "extend_up_factor": 1.0,
+      "extend_down_factor": 1.0,
+      "extend_left_factor": 1.0,
+      "extend_right_factor": 1.0,
+      "context_from_mask_extend_factor": 5.0,
+      "output_resize_to_target_size": true,
+      "output_target_width": 1024,
+      "output_target_height": 1024,
+      "output_padding": "32",
+      "device_mode": "gpu (much faster)"
+    }
+  },
+  "8": {
+    "class_type": "INPAINT_LoadFooocusInpaint",
+    "inputs": {
+      "head": "fooocus_inpaint_head.pth",
+      "patch": "inpaint_v26.fooocus.patch"
+    }
+  },
+  "9": {
+    "class_type": "VAEEncodeForInpaint",
+    "inputs": {
+      "pixels": [
+        "28",
+        1
+      ],
+      "vae": [
+        "1",
+        2
+      ],
+      "mask": [
+        "28",
+        2
+      ],
+      "grow_mask_by": 6
+    }
+  },
+  "10": {
+    "class_type": "INPAINT_ApplyFooocusInpaint",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "patch": [
+        "8",
+        0
+      ],
+      "latent": [
+        "9",
+        0
+      ]
+    }
+  },
+  "11": {
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "positive"
+    },
+    "inputs": {
+      "text": "bright red lipstick, cherry red lips, glossy shine, classic red lip, fair skin",
+      "clip": [
+        "1",
+        1
+      ]
+    }
+  },
+  "12": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "natural lip color, nude lips, pale lips, text, watermark, bad quality, deformed",
+      "clip": [
+        "1",
+        1
+      ]
+    }
+  },
+  "13": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "11",
+        0
+      ],
+      "negative": [
+        "12",
+        0
+      ],
+      "latent_image": [
+        "9",
+        0
+      ],
+      "seed": 0,
+      "control_after_generate": "randomize",
+      "steps": 20,
+      "cfg": 7,
+      "sampler_name": "dpmpp_2m_sde_gpu",
+      "scheduler": "karras",
+      "denoise": 0.6
+    }
+  },
+  "14": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "13",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    }
+  },
+  "29": {
+    "class_type": "InpaintStitchImproved",
+    "inputs": {
+      "stitcher": [
+        "28",
+        0
+      ],
+      "inpainted_image": [
+        "14",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "29",
+        0
+      ],
+      "filename_prefix": "FaceRefine_"
+    }
+  },
+  "30": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "28",
+        1
+      ],
+      "filename_prefix": "CropDebug_"
+    }
+  },
+  "31": {
+    "class_type": "MaskToImage",
+    "inputs": {
+      "mask": [
+        "28",
+        2
+      ]
+    }
+  },
+  "32": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "31",
+        0
+      ],
+      "filename_prefix": "MaskDebug_"
+    }
+  }
+}

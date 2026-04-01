@@ -1,0 +1,126 @@
+{
+  "1": {
+    "inputs": {"image": "bimbo_face_natural.png"},
+    "class_type": "LoadImage",
+    "_meta": {"title": "Source Face (Flux2_00038)"}
+  },
+  "10": {
+    "inputs": {
+      "src_image": ["1", 0],
+      "rotate_pitch": 0, "rotate_yaw": 0, "rotate_roll": 0,
+      "blink": 0, "eyebrow": 0, "wink": 0,
+      "pupil_x": 0, "pupil_y": 0,
+      "aaa": 0, "eee": 0, "woo": 0,
+      "smile": 0.5,
+      "src_ratio": 1, "sample_ratio": 1, "crop_factor": 1.5
+    },
+    "class_type": "ExpressionEditor",
+    "_meta": {"title": "Expression: Neutral"}
+  },
+  "11": {
+    "inputs": {
+      "src_image": ["1", 0],
+      "rotate_pitch": 0, "rotate_yaw": 5, "rotate_roll": 0,
+      "blink": 0, "eyebrow": 8, "wink": 0,
+      "pupil_x": 0, "pupil_y": 0,
+      "aaa": 0, "eee": 5, "woo": 0,
+      "smile": 1.3,
+      "src_ratio": 1, "sample_ratio": 1, "crop_factor": 1.5
+    },
+    "class_type": "ExpressionEditor",
+    "_meta": {"title": "Expression: Happy"}
+  },
+  "12": {
+    "inputs": {
+      "src_image": ["1", 0],
+      "rotate_pitch": -5, "rotate_yaw": 0, "rotate_roll": 0,
+      "blink": -8, "eyebrow": 10, "wink": 0,
+      "pupil_x": 0, "pupil_y": -3,
+      "aaa": 5, "eee": 8, "woo": 0,
+      "smile": 1.3,
+      "src_ratio": 1, "sample_ratio": 1, "crop_factor": 1.5
+    },
+    "class_type": "ExpressionEditor",
+    "_meta": {"title": "Expression: Excited"}
+  },
+  "13": {
+    "inputs": {
+      "src_image": ["1", 0],
+      "rotate_pitch": -5, "rotate_yaw": 0, "rotate_roll": 0,
+      "blink": -10, "eyebrow": 15, "wink": 0,
+      "pupil_x": 0, "pupil_y": -5,
+      "aaa": 25, "eee": 0, "woo": 0,
+      "smile": 0,
+      "src_ratio": 1, "sample_ratio": 1, "crop_factor": 1.5
+    },
+    "class_type": "ExpressionEditor",
+    "_meta": {"title": "Expression: Shocked"}
+  },
+  "14": {
+    "inputs": {
+      "src_image": ["1", 0],
+      "rotate_pitch": 5, "rotate_yaw": 15, "rotate_roll": 3,
+      "blink": 5, "eyebrow": -3, "wink": 0,
+      "pupil_x": 5, "pupil_y": 8,
+      "aaa": 0, "eee": 0, "woo": 0,
+      "smile": 0.5,
+      "src_ratio": 1, "sample_ratio": 1, "crop_factor": 1.5
+    },
+    "class_type": "ExpressionEditor",
+    "_meta": {"title": "Expression: Embarrassed"}
+  },
+  "15": {
+    "inputs": {
+      "src_image": ["1", 0],
+      "rotate_pitch": 0, "rotate_yaw": -8, "rotate_roll": 0,
+      "blink": 0, "eyebrow": -10, "wink": 0,
+      "pupil_x": 0, "pupil_y": 0,
+      "aaa": 0, "eee": 5, "woo": 0,
+      "smile": -0.3,
+      "src_ratio": 1, "sample_ratio": 1, "crop_factor": 1.5
+    },
+    "class_type": "ExpressionEditor",
+    "_meta": {"title": "Expression: Frustrated"}
+  },
+  "16": {
+    "inputs": {
+      "src_image": ["1", 0],
+      "rotate_pitch": 0, "rotate_yaw": 0, "rotate_roll": 0,
+      "blink": 5, "eyebrow": 0, "wink": 0,
+      "pupil_x": 0, "pupil_y": 5,
+      "aaa": 8, "eee": 0, "woo": 0,
+      "smile": 1.0,
+      "src_ratio": 1, "sample_ratio": 1, "crop_factor": 1.5
+    },
+    "class_type": "ExpressionEditor",
+    "_meta": {"title": "Expression: Aroused"}
+  },
+  "20": {
+    "inputs": {"filename_prefix": "bimbo_expr_01_neutral", "images": ["10", 0]},
+    "class_type": "SaveImage", "_meta": {"title": "Save Neutral"}
+  },
+  "21": {
+    "inputs": {"filename_prefix": "bimbo_expr_02_happy", "images": ["11", 0]},
+    "class_type": "SaveImage", "_meta": {"title": "Save Happy"}
+  },
+  "22": {
+    "inputs": {"filename_prefix": "bimbo_expr_03_excited", "images": ["12", 0]},
+    "class_type": "SaveImage", "_meta": {"title": "Save Excited"}
+  },
+  "23": {
+    "inputs": {"filename_prefix": "bimbo_expr_04_shocked", "images": ["13", 0]},
+    "class_type": "SaveImage", "_meta": {"title": "Save Shocked"}
+  },
+  "24": {
+    "inputs": {"filename_prefix": "bimbo_expr_05_embarrassed", "images": ["14", 0]},
+    "class_type": "SaveImage", "_meta": {"title": "Save Embarrassed"}
+  },
+  "25": {
+    "inputs": {"filename_prefix": "bimbo_expr_06_frustrated", "images": ["15", 0]},
+    "class_type": "SaveImage", "_meta": {"title": "Save Frustrated"}
+  },
+  "26": {
+    "inputs": {"filename_prefix": "bimbo_expr_07_aroused", "images": ["16", 0]},
+    "class_type": "SaveImage", "_meta": {"title": "Save Aroused"}
+  }
+}

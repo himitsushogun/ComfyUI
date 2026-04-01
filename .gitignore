@@ -2,7 +2,6 @@ __pycache__/
 *.py[cod]
 /output/
 /input/
-!/input/example.png
 /models/
 /temp/
 /custom_nodes/
@@ -24,3 +23,15 @@ web_custom_versions/
 openapi.yaml
 filtered-openapi.yaml
 uv.lock
+
+# Training data and cache (keep scripts/configs, not images)
+/training/*/10_*/
+/training/*/culled/
+/training/*/cache/
+/training/*/logs/
+/training/*/sample/
+
+# Local tools (large binaries)
+*.AppImage
+/realesrgan/
+/Video2X-x86_64.AppImage

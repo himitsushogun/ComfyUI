@@ -1,0 +1,132 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "flux1-dev-kontext_fp8_scaled.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {"title": "Load Diffusion Model"}
+  },
+  "2": {
+    "class_type": "DualCLIPLoader",
+    "inputs": {
+      "clip_name1": "clip_l.safetensors",
+      "clip_name2": "t5xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "flux",
+      "device": "default"
+    },
+    "_meta": {"title": "DualCLIPLoader"}
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "ae.safetensors"
+    },
+    "_meta": {"title": "Load VAE"}
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "oar2.jpg"
+    },
+    "_meta": {"title": "Load Image (outfit reference)"}
+  },
+  "15": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "secretary_basic_hi_res.png"
+    },
+    "_meta": {"title": "Load Image (person)"}
+  },
+  "5": {
+    "class_type": "ImageStitch",
+    "inputs": {
+      "image1": ["4", 0],
+      "image2": ["15", 0],
+      "direction": "right",
+      "match_image_size": true,
+      "spacing_width": 0,
+      "spacing_color": "white"
+    },
+    "_meta": {"title": "Image Stitch (outfit | person)"}
+  },
+  "6": {
+    "class_type": "FluxKontextImageScale",
+    "inputs": {
+      "image": ["5", 0]
+    },
+    "_meta": {"title": "FluxKontextImageScale"}
+  },
+  "7": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": ["6", 0],
+      "vae": ["3", 0]
+    },
+    "_meta": {"title": "VAE Encode"}
+  },
+  "8": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "placeholder prompt",
+      "clip": ["2", 0]
+    },
+    "_meta": {"title": "CLIP Text Encode (Positive Prompt)"}
+  },
+  "9": {
+    "class_type": "ConditioningZeroOut",
+    "inputs": {
+      "conditioning": ["8", 0]
+    },
+    "_meta": {"title": "ConditioningZeroOut"}
+  },
+  "10": {
+    "class_type": "ReferenceLatent",
+    "inputs": {
+      "conditioning": ["8", 0],
+      "latent": ["7", 0]
+    },
+    "_meta": {"title": "ReferenceLatent"}
+  },
+  "11": {
+    "class_type": "FluxGuidance",
+    "inputs": {
+      "guidance": 4.0,
+      "conditioning": ["10", 0]
+    },
+    "_meta": {"title": "FluxGuidance"}
+  },
+  "12": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": ["1", 0],
+      "positive": ["11", 0],
+      "negative": ["9", 0],
+      "latent_image": ["7", 0],
+      "seed": 0,
+      "control_after_generate": "randomize",
+      "steps": 20,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+    },
+    "_meta": {"title": "KSampler"}
+  },
+  "13": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["12", 0],
+      "vae": ["3", 0]
+    },
+    "_meta": {"title": "VAE Decode"}
+  },
+  "14": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["13", 0],
+      "filename_prefix": "Kontext_outfit"
+    },
+    "_meta": {"title": "Save Image"}
+  }
+}
