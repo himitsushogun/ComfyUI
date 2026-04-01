@@ -64,6 +64,13 @@ class RMS_norm(nn.Module):
             x, dim=(1 if self.channel_first else -1)) * self.scale * self.gamma.to(x) + (self.bias.to(x) if self.bias is not None else 0)
 
 
+class _RepeatUpsample2x(nn.Module):
+    """Nearest-neighbor 2x spatial upsample via repeat_interleave.
+    Avoids F.interpolate native HIP kernels that are missing for gfx1100."""
+    def forward(self, x):
+        return x.repeat_interleave(2, dim=-2).repeat_interleave(2, dim=-1)
+
+
 class Resample(nn.Module):
 
     def __init__(self, dim, mode):
@@ -76,11 +83,11 @@ class Resample(nn.Module):
         # layers
         if mode == 'upsample2d':
             self.resample = nn.Sequential(
-                nn.Upsample(scale_factor=(2., 2.), mode='nearest-exact'),
+                _RepeatUpsample2x(),
                 ops.Conv2d(dim, dim // 2, 3, padding=1))
         elif mode == 'upsample3d':
             self.resample = nn.Sequential(
-                nn.Upsample(scale_factor=(2., 2.), mode='nearest-exact'),
+                _RepeatUpsample2x(),
                 ops.Conv2d(dim, dim // 2, 3, padding=1))
             self.time_conv = CausalConv3d(
                 dim, dim * 2, (3, 1, 1), padding=(1, 0, 0))

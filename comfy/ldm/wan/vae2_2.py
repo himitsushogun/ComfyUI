@@ -13,6 +13,13 @@ ops = comfy.ops.disable_weight_init
 CACHE_T = 2
 
 
+class _RepeatUpsample2x(nn.Module):
+    """Nearest-neighbor 2x spatial upsample via repeat_interleave.
+    Avoids F.interpolate native HIP kernels that are missing for gfx1100."""
+    def forward(self, x):
+        return x.repeat_interleave(2, dim=-2).repeat_interleave(2, dim=-1)
+
+
 class Resample(nn.Module):
 
     def __init__(self, dim, mode):
@@ -30,12 +37,12 @@ class Resample(nn.Module):
         # layers
         if mode == "upsample2d":
             self.resample = nn.Sequential(
-                nn.Upsample(scale_factor=(2.0, 2.0), mode="nearest-exact"),
+                _RepeatUpsample2x(),
                 ops.Conv2d(dim, dim, 3, padding=1),
             )
         elif mode == "upsample3d":
             self.resample = nn.Sequential(
-                nn.Upsample(scale_factor=(2.0, 2.0), mode="nearest-exact"),
+                _RepeatUpsample2x(),
                 ops.Conv2d(dim, dim, 3, padding=1),
                 # ops.Conv2d(dim, dim//2, 3, padding=1)
             )
